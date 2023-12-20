@@ -5,7 +5,7 @@ from django.db import models
 class Todo(models.Model):
     title =  models.CharField(max_length = 50)
     date = models.DateTimeField(auto_now_add = True)
-    completed = models.BooleanField(default = True)
+    completed = models.BooleanField(default = False)
 
 
 

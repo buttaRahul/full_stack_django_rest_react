@@ -7,12 +7,30 @@ const TodoListItem = ({todo}) => {
 
 
     const handleCompleted = (e)=>{
-        console.log("Clicked Complete")
+        todo.completed = true
+        const url = `http://127.0.0.1:8000/api/todos/${todo.id}/`
+        const options = {
+            "method" : "PUT",
+            "headers": {
+                "content-Type" : "application/json"
+
+            },
+            "body": JSON.stringify(todo)
+        }
+        fetch(url,options).then(resp=> resp.json()).then(jsonData => console.log(jsonData))
     }
 
 
     const handleDelete = () =>{
-        console.log("Clicked Delete")
+        // console.log("Clicked Delete")
+        const url = `http://127.0.0.1:8000/api/todos/${todo.id}/`
+        const options = {
+            "method" : "DELETE",
+            
+        }
+        fetch(url,options).then(resp=> {
+            if (resp.ok) console.log("Todo with id: ",todo.id," deleted")
+        })
     }
 
     console.log(todo)
