@@ -1,12 +1,19 @@
 import { Box, IconButton, Typography } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import { APICall } from '../apiCall'
+import { TodoContext } from '../TodoContext'
 
 const TodoListItem = ({todo}) => {
+    const {refresh} = useContext(TodoContext)
 
+    const handleCompleted= async  ()=>{
+        await APICall.PATCH(todo.id)
+        await refresh()
 
-    const handleCompleted = (e)=>{
+    }
+    const handleCompleted1= (e)=>{
         todo.completed = true
         const url = `http://127.0.0.1:8000/api/todos/${todo.id}/`
         const options = {
@@ -21,7 +28,12 @@ const TodoListItem = ({todo}) => {
     }
 
 
-    const handleDelete = () =>{
+    const handleDelete = async () =>{
+        await APICall.DELETE(todo.id)
+        await refresh()
+
+    }
+    const handleDelete1 = () =>{
         // console.log("Clicked Delete")
         const url = `http://127.0.0.1:8000/api/todos/${todo.id}/`
         const options = {

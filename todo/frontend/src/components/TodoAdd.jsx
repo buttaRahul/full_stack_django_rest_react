@@ -1,8 +1,11 @@
 import { Box, Button, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { APICall } from '../apiCall'
+import { TodoContext } from '../TodoContext'
 
 
 const TodoAdd = () => {
+  const {refresh} = useContext(TodoContext)
   const [title, setTitle] = useState('')
 
   const handleOnChange = (e) => {
@@ -10,7 +13,11 @@ const TodoAdd = () => {
   }
 
 
-  const handleAdd = (e) => {
+  const handleAdd = async () => {     
+    await APICall.POST(title)
+    await refresh()
+  }
+  const handleAdd1 = (e) => {
     const options = {
       "method": "POST",
       "headers": {
