@@ -9,7 +9,10 @@ const TodoContainer = () => {
         <>
             <CssBaseline />
             <Container maxWidth="100vw" >
-                <Box sx={{ height: '100vh' }} display={'flex'} justifyContent={'center'} alignItems={'center'} bgcolor={'darkblue'}>
+                <Box sx={{ minHeight: '100vh',
+                // marginTop: '100px'
+               
+             }} display={'flex'} justifyContent={'center'}  bgcolor={'#8659b2'}>
                     <TodoContextProvider>
                         <TodoPage />
                     </TodoContextProvider>

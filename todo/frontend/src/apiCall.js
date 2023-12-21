@@ -1,88 +1,177 @@
-export class APICall{
-
+export class APICall {
     static BASE_URL = "http://127.0.0.1:8000/api/todos/"
-    static async GET(){
+
+
+    static async GET() {
         const resp = await fetch(this.BASE_URL)
-
-        if(resp.ok){
-        const jsonData =  await resp.json()
-
-        return jsonData
+        if (resp.ok) {
+            const data = await resp.json()
+            
+            return {
+                "ok": resp.ok,
+                "data": data,
+            }
         }
-        else
-        {
-        //    return {
-        //     "error": "Todo not created ",
-        //     "code" : resp.status,
-        //     "status_text" : resp.statusText
-        //    }
-
-             console.log("ERROR WHILE CREATING NEW TODO")
+        else {
+            return {
+                "ok": resp.ok,
+                "status": resp.status,
+                "statusText": resp.statusText,
+                "error": "BAD URL",
+            }
         }
-        
     }
+
 
     static async PATCH(id){
-        console.log('id in patch ', id)
         const options = {
-            "method" : "PATCH",
-            "headers" : {
-                "Content-Type" : "application/json"
+            "method": "PATCH",
+            "headers": {
+                "Content-Type":"application/json",
             },
-
             "body":JSON.stringify({
-                "completed":true,
+                "completed": true,
             })
         }
-        // const url = `{}`
-        const resp = await fetch(`${this.BASE_URL}${id}/`,options)
-        
-        if(!resp.ok) 
-        //  return {
-        //     "error": "Update Failed for Todo with id :" + id,
+        const newUrl = `${this.BASE_URL}${id}/`
+        // console.log(newUrl)
+        const resp = await fetch(newUrl,options)
+        const data = await resp.json()
 
-        // }
-        {
-            console.log("ERROR WHILE UPDATING TODO WITH ID: ",id)
-            console.log(resp)
-
+        if(resp.ok) {
+            return {
+                "ok": resp.ok,
+                "message": "Marked as Completed for todo :" + id,
+                
+            }
         }
+
         else{
-            console.log("Todo updated for id",id)
+            return {
+                "ok": resp.ok,
+                "status": resp.status,
+                "statusText": resp.statusText,
+                "error": data,
+
+            }
         }
+
     }
+
 
     static async POST(title){
         const options = {
-            "method" : "POST",
-            "headers" : {
+            "method": "POST",
+            "headers":{
                 "Content-Type": "application/json",
             },
-            "body":JSON.stringify({
+            "body": JSON.stringify({
                 "title" : title,
-                
             })
+
         }
         const resp = await fetch(this.BASE_URL,options)
+        const data = await resp.json()
+        if(resp.ok){
+          
+          return {
+            "ok": resp.ok,
+            "message" : "New todo created with id "+ data.id, 
+          }
+        }
 
-        if(resp.ok) {
-            const jsonData = await resp.json()
-            console.log("New todo created with id : ",jsonData.id)
-        }
         else{
-            console.log("Error while creating todo")
+         
+
+            // console.log(data)
+            return{
+                "ok": resp.ok,
+                "error": data,
+                "status": resp.status,
+                "statusText": resp.statusText,
+
+            }
         }
+        
+        
+
     }
+
 
 
     static async DELETE(id){
-        
-        const resp  = await fetch(this.BASE_URL+id+"/",{"method":"DELETE"})
-        if(resp.ok) {
-            console.log("TODO DELTED")
+    
+        const resp = await fetch(`${this.BASE_URL}${id}`,{"method": "DELETE"})
+        // const data = await 
+        if(resp.ok ){
+            return {
+                "ok" : resp.ok,
+                "message" : "Todo with id "+ id + " deleted", 
+                
+            }
         }
+
         else{
-            console.log("ERROR WHILE DELETING")
+            const data = await resp.json()
+            return {
+                "ok": resp.ok,
+                "status" : resp.status,
+                "statusText" : resp.statusText,
+                "error" : data,
+            }
         }
     }
+
+
+
+
+
 }
+
+
+// APICall.GET().then(resp => {
+//     if(resp.ok) console.log(resp.data)
+//     else {
+//         console.log(resp.error)
+// }
+// })
+
+// APICall.DELETE(24).then(resp => {
+    
+//     if(resp.ok) console.log(resp.message)
+//     else {
+//         console.log(resp.error)
+//         console.log(resp.status)
+//         console.log(resp.statusText)
+// }
+// })
+
+// APICall.POST().then(resp => {
+    
+//     if(resp.ok) console.log(resp.message)
+//     else {
+//         console.log(resp.error)
+//         console.log(resp.status)
+//         console.log(resp.statusText)
+// }
+// })
+
+// APICall.POST("CAT").then(resp => {
+    
+//     if(resp.ok) console.log(resp.message)
+//     else {
+//         console.log(resp.error)
+//         console.log(resp.status)
+//         console.log(resp.statusText)
+// }
+// })
+
+// APICall.PATCH(23).then(resp => {
+    
+//     if(resp.ok) console.log(resp.message)
+//     else {
+//         console.log(resp.error)
+//         console.log(resp.status)
+//         console.log(resp.statusText)
+// }
+// })

@@ -6,53 +6,37 @@ import { APICall } from '../apiCall'
 import { TodoContext } from '../TodoContext'
 
 const TodoListItem = ({todo}) => {
-    const {refresh} = useContext(TodoContext)
 
+    const {setTodosList} = useContext(TodoContext)
     const handleCompleted= async  ()=>{
-        await APICall.PATCH(todo.id)
-        await refresh()
+        const resp = await APICall.PATCH(todo.id)
 
-    }
-    const handleCompleted1= (e)=>{
-        todo.completed = true
-        const url = `http://127.0.0.1:8000/api/todos/${todo.id}/`
-        const options = {
-            "method" : "PUT",
-            "headers": {
-                "content-Type" : "application/json"
-
-            },
-            "body": JSON.stringify(todo)
+        if(resp.ok){
+            const getData = await APICall.GET()
+            if(getData.ok){
+                setTodosList(getData.data)
+            }
         }
-        fetch(url,options).then(resp=> resp.json()).then(jsonData => console.log(jsonData))
+
     }
+    
 
 
     const handleDelete = async () =>{
-        await APICall.DELETE(todo.id)
-        await refresh()
-
-    }
-    const handleDelete1 = () =>{
-        // console.log("Clicked Delete")
-        const url = `http://127.0.0.1:8000/api/todos/${todo.id}/`
-        const options = {
-            "method" : "DELETE",
-            
+       const resp =  await APICall.DELETE(todo.id)
+       
+       if(resp.ok){
+        const getData = await APICall.GET()
+        if(getData.ok){
+            setTodosList(getData.data)
         }
-        fetch(url,options).then(resp=> {
-            if (resp.ok) console.log("Todo with id: ",todo.id," deleted")
-        })
+       }
     }
+    
 
-    console.log(todo)
-    // const todo = {
-    //     "title": "Eat Ice cream",
-
-    //     "completed": false,
-    // }
+    
     return (
-        <Box bgcolor={'lightblue'} display={'flex'} alignItems={'center'} padding={1} sx={
+        <Box bgcolor={'lightyellow'} display={'flex'} alignItems={'center'} padding={1} sx={
             {
                 borderRadius:'10px'
             }

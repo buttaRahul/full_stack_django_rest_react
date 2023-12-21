@@ -5,7 +5,7 @@ import { TodoContext } from '../TodoContext'
 
 
 const TodoAdd = () => {
-  const {refresh} = useContext(TodoContext)
+  const {setTodosList} = useContext(TodoContext)
   const [title, setTitle] = useState('')
 
   const handleOnChange = (e) => {
@@ -14,31 +14,22 @@ const TodoAdd = () => {
 
 
   const handleAdd = async () => {     
-    await APICall.POST(title)
-    await refresh()
-  }
-  const handleAdd1 = (e) => {
-    const options = {
-      "method": "POST",
-      "headers": {
-        "Content-Type": "application/json",
-      },
-      "body": JSON.stringify({
-        "title": title
-      })
-    }
-    fetch("http://127.0.0.1:8000/api/todos/", options).then(resp => {
-      if (resp.ok)
-        return resp.json()
-      else {
-        console.log(resp.status)
-        console.log(resp.statusText)
+    const resp = await APICall.POST(title)
+    if(resp.ok) {
+      const getResp = await APICall.GET()
+      if(getResp.ok) {
+        setTodosList(getResp.data)
+        setTitle('')
       }
-    }).then(jsonData => console.log("Todo Added with id: ",jsonData.id))
+    }
+
+
+    
   }
+  
   return (
-    <Box bgcolor={'peachpuff'} display={'flex'} marginTop={5} mb={2}>
-      <TextField fullWidth label='New Todo' onChange={handleOnChange}>Text</TextField>
+    <Box bgcolor={'#e8e8f8'} display={'flex'} marginTop={5} mb={2}>
+      <TextField fullWidth label='New Todo'value={title} onChange={handleOnChange}>Text</TextField>
       <Button variant='contained' sx={{
         marginLeft: '2px'
       }}
